@@ -1,4 +1,4 @@
-var showAxis = function(size) {
+var showAxis = function(size, scene) {
     var makeTextPlane = function(text, color, size) {
         var dynamicTexture = new BABYLON.DynamicTexture("DynamicTexture", 50, scene, true);
         dynamicTexture.hasAlpha = true;
