@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta charset="utf-8">
+      <title>BabylonJS Point Cloud</title>
+      <style>
+        html, body {
+          overflow: hidden;
+          width: 100%;
+          height: 100%;
+          margin: 0;
+          padding: 0;
+        }
+        #renderCanvas {
+          width: 100%;
+          height: 100%;
+          touch-action: none;
+        }
+    </style>
+    <script src="babylon4.1.js"></script>
+	  <script src="dudeData.js"></script>
+   
+    <script src="rabbitData.js"></script>
+   </head>
+   <body>
+        <canvas id="renderCanvas"></canvas>
+       <script>
+    if (BABYLON.Engine.isSupported()) {
+      var canvas = document.getElementById("renderCanvas");
+      var engine = new BABYLON.Engine(canvas, true);
+  
+      var createScene = function () {
+        var scene = new BABYLON.Scene(engine);
+      
+        var camera = new BABYLON.ArcRotateCamera("camera1", 0, 0, 0, new BABYLON.Vector3(0, 40, 0), scene);
+        camera.setPosition(new BABYLON.Vector3(0, 40, 200));
+        camera.attachControl(canvas, true);
+          
+        //Create a custom mesh  
+        var customMesh = new BABYLON.Mesh("custom", scene);
+  
+        var vertexData = new BABYLON.VertexData();
+        var rabbitPositions = rabbitData.points;
+        var rabbitColors = rabbitData.colors;
+        
+        var dudePositions = dudeData.points;
+        var dudeColors = dudeData.colors;
+        
+        //calculate spiral conditions
+        var l = rabbitPositions.length / 3;
+ 
+        //Create a custom mesh  
+        var customMesh = new BABYLON.Mesh("custom", scene);
+        
+        //Assign positions
+        vertexData.positions = rabbitPositions;
+        vertexData.colors = rabbitColors;
+
+        //Apply vertexData to custom mesh
+        vertexData.applyToMesh(customMesh, true);
+  
+        var mat = new BABYLON.StandardMaterial("mat", scene);
+        mat.emissiveColor = new BABYLON.Color3(1, 1, 1);
+        mat.disableLighting = true;
+        mat.pointsCloud = true;
+        mat.pointSize = 1;
+  
+        customMesh.material = mat;
+
+        var nbFramesToPause = 120;
+        var iterations = 100;
+        var direction = 1;
+        var frameCount = 0;
+        var positions = [];
+        var colors = [];
+        scene.registerAfterRender(function() {
+            if (frameCount > nbFramesToPause && frameCount < nbFramesToPause + iterations) {
+                for (var p = 0; p < l; p++) {
+                    positions[3 * p ] = rabbitPositions[3 * p ] + Math.sin((frameCount - nbFramesToPause) / iterations) * (frameCount - nbFramesToPause) * (dudePositions[3 * p ] - rabbitPositions[3 * p ]) / iterations;
+                    positions[3 * p + 1] = rabbitPositions[3 * p + 1] + Math.sin((frameCount - nbFramesToPause) / iterations) * (frameCount - nbFramesToPause) * (dudePositions[3 * p + 1] - rabbitPositions[3 * p + 1]) / iterations;
+                    positions[3 * p + 2] = rabbitPositions[3 * p + 2] + Math.sin((frameCount - nbFramesToPause) / iterations) * (frameCount - nbFramesToPause) * (dudePositions[3 * p + 2] - rabbitPositions[3 * p + 2]) / iterations;
+                    colors[4 * p ] = rabbitColors[4 * p ] + Math.sin((frameCount - nbFramesToPause) / iterations) * (frameCount - nbFramesToPause) * (dudeColors[4 * p ] - rabbitColors[4 * p ]) / iterations;
+                    colors[4 * p + 1] = rabbitColors[4 * p + 1] + Math.sin((frameCount - nbFramesToPause) / iterations) * (frameCount - nbFramesToPause) * (dudeColors[4 * p + 1] - rabbitColors[4 * p + 1]) / iterations;
+                    colors[4 * p + 2] = rabbitColors[4 * p + 2] + Math.sin((frameCount - nbFramesToPause) / iterations) * (frameCount - nbFramesToPause) * (dudeColors[4 * p + 2] - rabbitColors[4 * p + 2]) / iterations;
+                    colors[4 * p + 3] = rabbitColors[4 * p + 3] + Math.sin((frameCount - nbFramesToPause) / iterations) * (frameCount - nbFramesToPause) * (dudeColors[4 * p + 3] - rabbitColors[4 * p + 3]) / iterations;
+                }
+
+                customMesh.updateVerticesData(BABYLON.VertexBuffer.PositionKind, positions);
+                customMesh.updateVerticesData(BABYLON.VertexBuffer.ColorKind, colors);                
+            }
+            frameCount += direction;
+            if (frameCount === 0 || frameCount === (2 * nbFramesToPause + iterations) ) {
+                direction *= -1;
+            }
+            camera.alpha += 0.01;
+        });
+  
+          return scene;
+      }
+  
+  
+  var scene = createScene();
+  
+  engine.runRenderLoop(function () {
+    scene.render();
+  
+  });
+  
+  window.addEventListener("resize", function () {
+      engine.resize();
+  });
+          }
+      </script>
+  </body>
+  </html>
