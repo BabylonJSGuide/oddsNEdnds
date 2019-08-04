@@ -35,11 +35,11 @@
     camera.attachControl(canvas, true);
 
     
-    var sm = new BABYLON.SpriteManager("playerManager", "https://www.babylonjs-playground.com/textures/player.png", 1, 64, scene, 0);
+    var sm = new BABYLON.SpriteManager("playerManager", "https://www.babylonjs-playground.com/textures/player.png", 1, 64, scene);
     sm.logCount = 0;
 
     var player = new BABYLON.Sprite("player", sm);
-    player.cellIndex = 24;
+    player.cellIndex = 0;
 
     var plane = BABYLON.MeshBuilder.CreatePlane("plane", {updatable: true}, scene);
     plane.material = new BABYLON.StandardMaterial("mat", scene);
