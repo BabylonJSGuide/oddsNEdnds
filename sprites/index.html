@@ -43,7 +43,6 @@
         var tree = new BABYLON.Sprite("tree", spriteManagerTrees);
         tree.position.x = Math.random() * 100 - 50;
         tree.position.z = Math.random() * 100 - 50;
-        tree.invertV = -1;
         tree.isPickable = true;
 
         //Some "dead" trees
@@ -58,11 +57,9 @@
 
     // First animated player
     var player = new BABYLON.Sprite("player", spriteManagerPlayer);
-    //player.playAnimation(0, 40, true, 100);
-    player.cellIndex = 0;
+    player.playAnimation(0, 40, true, 100);
     player.position.y = -0.3;
     player.size = 0.3;
-    //player.invertV = 0; //Change orientation
     player.isPickable = true;
 
     // Second standing player
@@ -72,7 +69,7 @@
     player2.position.y = -0.3;
     player2.position.x = 1;
     player2.size = 0.3;
-    player2.invertU = 0; //Change orientation
+    player2.invertU = -1; //Change orientation
     player2.isPickable = true;
 
 
@@ -89,7 +86,8 @@
 
 
     return scene;
-}      
+}
+     
   
   var scene = createScene();  
 
