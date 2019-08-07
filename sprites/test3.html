@@ -2,7 +2,7 @@
 <html>
    <head>
       <meta charset="utf-8">
-      <title>BabylonJS Packed Sprites</title>
+      <title>Sprites JSON File</title>
       <style>
         html, body {
           overflow: hidden;
@@ -26,7 +26,7 @@
       var canvas = document.getElementById("renderCanvas");
       var engine = new BABYLON.Engine(canvas, true);
   
-      var createScene = function () {
+var createScene = function () {
     var scene = new BABYLON.Scene(engine);
 
     // Create camera and light
@@ -34,23 +34,23 @@
     var camera = new BABYLON.ArcRotateCamera("Camera", 1, 0.8, 8, new BABYLON.Vector3(0, 0, 0), scene);
     camera.attachControl(canvas, true);
 
-    
-
     //Create a manager for the player's sprite animation
-    var spriteManagerPlayer = new BABYLON.SpriteManager("playerManager", "player.png", 2, 64, scene);
+    var spm = new BABYLON.SpritePackedManager("spm", "pack1.png", 3, scene);
 
     // First animated player
-    var player = new BABYLON.Sprite("player", spriteManagerPlayer);
-    player.cellIndex = 0;
-    player.size = 1;
+    var sprite1 = new BABYLON.Sprite("player", spm);
+    sprite1.cellRef = "triangle.png";
+    sprite1.position.y = -0.3;
+    sprite1.size = 1;
+    sprite1.invertU = 0;
 
-    
     return scene;
 }
-     
-  
-  var scene = createScene();  
 
+
+  
+  var scene = createScene();
+  
   engine.runRenderLoop(function () {
     scene.render();
   

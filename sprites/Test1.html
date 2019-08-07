@@ -2,7 +2,7 @@
 <html>
    <head>
       <meta charset="utf-8">
-      <title>BabylonJS Packed Sprites</title>
+      <title>Sprites Direct Min Json</title>
       <style>
         html, body {
           overflow: hidden;
@@ -30,59 +30,42 @@
     var scene = new BABYLON.Scene(engine);
 
     // Create camera and light
-    var light = new BABYLON.PointLight("Point", new BABYLON.Vector3(5, 10, -5), scene);
-    var camera = new BABYLON.ArcRotateCamera("Camera", -Math.PI /2, Math.PI / 2.2, 2, new BABYLON.Vector3(0, 0, 0), scene);
+    var light = new BABYLON.PointLight("Point", new BABYLON.Vector3(5, 10, 5), scene);
+    var camera = new BABYLON.ArcRotateCamera("Camera", 1, 0.8, 8, new BABYLON.Vector3(0, 0, 0), scene);
     camera.attachControl(canvas, true);
 
-    
-    var sm = new BABYLON.SpriteManager("playerManager", "https://www.babylonjs-playground.com/textures/player.png", 1, 64, scene);
-    sm.logCount = 0;
+    var myobj = {"frames": {
 
-    var player = new BABYLON.Sprite("player", sm);
-    player.cellIndex = 12;
+		"eye.png":
+		{
+			"frame": {"x":0,"y":148,"w":400,"h":400}
+		},
+		"redman.png":
+		{
+			"frame": {"x":0,"y":0,"w":55,"h":97}
+		},
+		"spot.png":
+		{
+			"frame": {"x":199,"y":0,"w":148,"h":148}
+		},
+		"triangle.png":
+		{
+			"frame": {"x":55,"y":0,"w":144,"h":72}
+		}}
+		}
 
-    var plane = BABYLON.MeshBuilder.CreatePlane("plane", {updatable: true}, scene);
-    plane.material = new BABYLON.StandardMaterial("mat", scene);
-    plane.material.diffuseTexture = new BABYLON.Texture("https://www.babylonjs-playground.com/textures/player.png", scene);
-    plane.material.diffuseTexture.hasAlpha = true;
-    plane.position.x = 1;
+myjson = JSON.stringify(myobj);
 
+    //Create a manager for the player's sprite animation
+    var spm = new BABYLON.SpritePackedManager("spm", "pack1.png", 3, scene, myjson);
 
-    scene.registerBeforeRender(function() {
+    // First animated player
+    var sprite1 = new BABYLON.Sprite("player", spm);
+    sprite1.cellRef = "redman.png";
+    sprite1.position.y = -0.3;
+    sprite1.size = 1;
+    sprite1.invertU = 0;
 
-        var uvs = [];
-
-        if( 100 < sm.logCount++ && sm.logCount++ < 105) {
-            for (var a = 0; a < 4; a++) {
-                arrayOffset = a * 18;
-
-                console.log("SPRITE NUM", sm.sprites[0].cellIndex);
-                console.log(a, "left", sm._vertexData[arrayOffset + 10]);
-                console.log(a, "top", sm._vertexData[arrayOffset + 11]);
-                console.log(a, "width", sm._vertexData[arrayOffset + 12]);
-                console.log(a, "height", sm._vertexData[arrayOffset + 13]);
-
-                console.log("inv X", sm._vertexData[arrayOffset + 8]);
-                console.log("inv Y", sm._vertexData[arrayOffset + 9]);
-
-                var uvOffsetX = Math.abs(sm._vertexData[arrayOffset + 6] - sm._vertexData[arrayOffset + 8]);
-                var uvOffsetY = Math.abs((1 - sm._vertexData[arrayOffset + 7]) - sm._vertexData[arrayOffset + 9]);
-                console.log("uvOffset", uvOffsetX, uvOffsetY);
-                
-                console.log("U", sm._vertexData[arrayOffset + 10]  + sm._vertexData[arrayOffset + 12] * uvOffsetX);
-                console.log("V", 1 - (sm._vertexData[arrayOffset + 11]  + sm._vertexData[arrayOffset + 13] * uvOffsetY));
-                console.log("");
-                uvs.push(sm._vertexData[arrayOffset + 10]  + sm._vertexData[arrayOffset + 12] * uvOffsetX);
-                uvs.push(1 - (sm._vertexData[arrayOffset + 11]  + sm._vertexData[arrayOffset + 13] * uvOffsetY));
-            }
-            plane.updateVerticesData(BABYLON.VertexBuffer.UVKind, uvs);
-            //if((sm.logCount % 60) == 0) {
-              //player.cellIndex++;
-            //}
-
-        }
-        
-    });
     return scene;
 }
 
