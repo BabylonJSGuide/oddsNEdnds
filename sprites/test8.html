@@ -41,16 +41,19 @@ var createScene = function () {
     var sprite1 = new BABYLON.Sprite("sprite1", spm);
     sprite1.cellRef = "triangle.png";
     sprite1.size = 1;
+    sprite1.isPickable = true;
 
     var sprite2 = new BABYLON.Sprite("sprite2", spm);
     sprite2.cellRef = "spot.png";
     sprite2.position.x = 0.5;
     sprite2.position.z = 0.2;
     sprite2.size = 1;
+    sprite2.isPickable = true;
 
     var sprite3 = new BABYLON.Sprite("sprite3", spm);
     sprite3.position.x = -0.5;
     sprite3.position.z = 0.3;
+    sprite3.isPickable = true;
 
     var sprite4 = new BABYLON.Sprite("sprite4", spm);
     sprite4.cellRef = "eye.png";
@@ -59,6 +62,7 @@ var createScene = function () {
     sprite4.size = 1;
     sprite4.invertU = -1;
     sprite4.invertV = -1;
+    sprite4.isPickable = true;
 
     spm.isPickable = true;
 
