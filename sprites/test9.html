@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta charset="utf-8">
+      <title>Many Sprites JSON File</title>
+      <style>
+        html, body {
+          overflow: hidden;
+          width: 100%;
+          height: 100%;
+          margin: 0;
+          padding: 0;
+        }
+        #renderCanvas {
+          width: 100%;
+          height: 100%;
+          touch-action: none;
+        }
+    </style>
+    <script src="babylon.max2.js"></script>
+   </head>
+   <body>
+        <canvas id="renderCanvas"></canvas>
+       <script>
+    if (BABYLON.Engine.isSupported()) {
+      var canvas = document.getElementById("renderCanvas");
+      var engine = new BABYLON.Engine(canvas, true);
+  
+var createScene = function () {
+    var scene = new BABYLON.Scene(engine);
+
+    // Create camera and light
+    var light = new BABYLON.PointLight("Point", new BABYLON.Vector3(5, 10, 5), scene);
+    var camera = new BABYLON.ArcRotateCamera("Camera", -Math.PI / 2, Math.PI / 2, 8, new BABYLON.Vector3(0, 0, 0), scene);
+    camera.attachControl(canvas, true);
+
+    //Create a manager for the player's sprite animation
+    var spm = new BABYLON.SpritePackedManager("spm", "pack1.png", 4, scene);
+
+    // First animated player
+    var sprite1 = new BABYLON.Sprite("sprite1", spm);
+    sprite1.cellRef = "triangle.png";
+    sprite1.size = 1;
+    sprite1.isPickable = true;
+
+    var sprite2 = new BABYLON.Sprite("sprite2", spm);
+    sprite2.cellRef = "spot.png";
+    sprite2.position.x = 0.5;
+    sprite2.position.z = 0.2;
+    sprite2.size = 1;
+    sprite2.isPickable = true;
+
+    var sprite3 = new BABYLON.Sprite("sprite3", spm);
+    sprite3.position.x = -0.5;
+    sprite3.position.z = 0.3;
+    sprite3.isPickable = true;
+
+    var sprite4 = new BABYLON.Sprite("sprite4", spm);
+    sprite4.cellRef = "eye.png";
+    sprite4.position.y= 0.5;
+    sprite4.position.z = 0.25;
+    sprite4.size = 1;
+    sprite4.invertU = -1;
+    sprite4.invertV = -1;
+    sprite4.isPickable = true;
+
+    spm.isPickable = true;
+
+    var ray = new BABYLON.Ray(new BABYLON.Vector3(20, 0.25, -20), new BABYLON.Vector3(-1, 0, 1), 500);
+    BABYLON.RayHelper.CreateAndShow(ray, scene, new BABYLON.Color3(0, 1, 0));
+    
+    var pickResult = scene.multiPickSpriteWithRay(ray);
+    console.log(pickResult);
+  
+
+    return scene;
+}
+
+
+  
+  var scene = createScene();
+  
+  engine.runRenderLoop(function () {
+    scene.render();
+  
+  });
+  
+  window.addEventListener("resize", function () {
+      engine.resize();
+  });
+          }
+      </script>
+  </body>
+  </html>
