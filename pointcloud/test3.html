@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta charset="utf-8">
+      <title>Sprites Direct JSON</title>
+      <style>
+        html, body {
+          overflow: hidden;
+          width: 100%;
+          height: 100%;
+          margin: 0;
+          padding: 0;
+        }
+        #renderCanvas {
+          width: 100%;
+          height: 100%;
+          touch-action: none;
+        }
+    </style>
+    <script src="babylon.max1.js"></script>
+   </head>
+   <body>
+        <canvas id="renderCanvas"></canvas>
+       <script>
+    if (BABYLON.Engine.isSupported()) {
+      var canvas = document.getElementById("renderCanvas");
+      var engine = new BABYLON.Engine(canvas, true);
+  
+      var createScene = function () {
+    var scene = new BABYLON.Scene(engine);
+    //const axis = new BABYLON.Debug.AxesViewer()
+
+    // Create camera and light
+    var light = new BABYLON.PointLight("Point", new BABYLON.Vector3(5, 10, 5), scene);
+    var camera = new BABYLON.ArcRotateCamera("Camera", -Math.PI / 2, Math.PI / 2, 2, new BABYLON.Vector3(0, 0, 0), scene);
+    camera.attachControl(canvas, true);
+
+    
+
+    //Create a manager for the player's sprite animation
+    var pcs= new BABYLON.PointsCloudSystem("pcs", 5, scene) 
+        //pcs.computeParticleRotation = true;
+    var myfunc = function(particle, i) {
+        var rotMatrix = new BABYLON.Matrix();
+        new BABYLON.Matrix.IdentityToRef(rotMatrix);
+        
+        particle.color = new BABYLON.Color4(Math.random(), Math.random(), Math.random(), Math.random() )
+        if (particle.idx > 0) {
+            particle.parentId = particle.idx - 1;
+        }
+        particle.position.y = 0.05;
+        particle.position.z = 0.01;
+        //particle.getRotationMatrix(rotMatrix);
+        //console.log("R", rotMatrix)
+    }
+    pcs.addPoints(10, myfunc);
+    var mesh = pcs.buildMesh();
+    //mesh.material.pointSize = 5;
+
+    pcs.updateParticle = function(particle) {
+
+            particle.rotation.y += 0.01; 
+
+        //particle.position.x += 0.01;
+        //console.log(particle.idx, particle.rotation)
+
+    }
+    
+    //pcs.setParticles()
+    //pcs.setParticles()
+
+    scene.registerAfterRender(() => {
+        pcs.setParticles()
+        //mesh.position.x += 0.001;
+    });
+    return scene;
+}
+
+
+  
+  var scene = createScene();
+  
+  engine.runRenderLoop(function () {
+    scene.render();
+  
+  });
+  
+  window.addEventListener("resize", function () {
+      engine.resize();
+  });
+          }
+      </script>
+  </body>
+  </html>
