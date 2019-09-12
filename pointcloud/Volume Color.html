@@ -2,7 +2,7 @@
 <html>
    <head>
       <meta charset="utf-8">
-      <title>Sprites Direct JSON</title>
+      <title>Points Cloud Volume Color Points</title>
       <style>
         html, body {
           overflow: hidden;
@@ -31,17 +31,38 @@
 
     // Create camera and light
     var light = new BABYLON.PointLight("Point", new BABYLON.Vector3(5, 10, 5), scene);
-    var camera = new BABYLON.ArcRotateCamera("Camera", 1, 0.8, 3, new BABYLON.Vector3(0, 0, 0), scene);
+    var camera = new BABYLON.ArcRotateCamera("Camera", 1, 0.8, 8, new BABYLON.Vector3(0, 0, 0), scene);
     camera.attachControl(canvas, true);
 
-    
+    var mat = new BABYLON.StandardMaterial("mat", scene);
+    var texture = new BABYLON.Texture("http://jerome.bousquie.fr/BJS/images/spriteAtlas.png", scene);
+    mat.diffuseTexture = texture;
+
+    var columns = 6;  // 6 columns
+    var rows = 4;  // 4 rows
+
+    var faceUV = new Array(6);
+
+    for (var i = 0; i < 6; i++) {
+        faceUV[i] = new BABYLON.Vector4(i / columns, 0, (i + 1) / columns, 1 / rows);
+    }
+
+    var options = {
+        width: 2,
+        height: 2,
+        depth: 2,
+        faceUV: faceUV
+    };
+
+    var box = BABYLON.MeshBuilder.CreateBox('box', options, scene);
+    box.material = mat;
 
     //Create a manager for the player's sprite animation
-    var pcs= new BABYLON.PointsCloudSystem("pcs", 1, scene) 
+    var pcs= new BABYLON.PointsCloudSystem("pcs", 5, scene); 
 
-    pcs.addPoints(10000);
-    var mesh = pcs.buildMesh();
-    //pcs.setParticles()
+    pcs.addVolumePoints(box, 10000, BABYLON.PointColor.COLOR);
+
+    box.dispose();
 
     return scene;
 }

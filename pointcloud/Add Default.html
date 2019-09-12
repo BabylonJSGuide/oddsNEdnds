@@ -31,33 +31,14 @@
 
     // Create camera and light
     var light = new BABYLON.PointLight("Point", new BABYLON.Vector3(5, 10, 5), scene);
-    var camera = new BABYLON.ArcRotateCamera("Camera", 1, 0.8, 8, new BABYLON.Vector3(0, 0, 0), scene);
+    var camera = new BABYLON.ArcRotateCamera("Camera", 1, 0.8, 3, new BABYLON.Vector3(0, 0, 0), scene);
     camera.attachControl(canvas, true);
 
-    var faceColors = [];
-	faceColors[0] = BABYLON.Color3.Blue();
-	faceColors[1] = BABYLON.Color3.White()
-	faceColors[2] = BABYLON.Color3.Red();
-	faceColors[3] = BABYLON.Color3.Black();
-	faceColors[4] = BABYLON.Color3.Green();
-	faceColors[5] = BABYLON.Color3.Yellow();
- 
-	var box = BABYLON.MeshBuilder.CreateBox("Box", {faceColors:faceColors, size:2}, scene, true);
-    box.material = new BABYLON.StandardMaterial("", scene);
-
     //Create a manager for the player's sprite animation
-    var pcs= new BABYLON.PointsCloudSystem("pcs", 5, scene) 
+    var pcs= new BABYLON.PointsCloudSystem("pcs", 1, scene) 
 
-    var myfunc = function(particle, i) {
-        particle.position = new BABYLON.Vector3(0.25 * Math.random(), i / 1000, 0.25 * Math.random());
-        particle.color = new BABYLON.Color4(Math.random(), Math.random(), Math.random(), Math.random() )
-    }
-    console.log(BABYLON.PointColor.RANDOM);
-    pcs.addVolumePoints(box, 10000);
+    pcs.addPoints(10000);
     var mesh = pcs.buildMesh();
-    mesh.material.pointSize = 2;
-    box.dispose();
-    pcs.setParticles()
 
     return scene;
 }

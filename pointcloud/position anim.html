@@ -46,20 +46,13 @@
     }
     pcs.addPoints(100, myfunc);
     var mesh = pcs.buildMesh();
-    //mesh.material.pointSize = 5;
 
     pcs.updateParticle = function(particle) {
         particle.position.x += 0.01;
-        //console.log(particle.idx, particle.position)
-
     }
-    
-    //pcs.setParticles()
-    //pcs.setParticles()
-
+  
     scene.registerAfterRender(() => {
         pcs.setParticles()
-        //mesh.position.x += 0.001;
     });
     return scene;
 }

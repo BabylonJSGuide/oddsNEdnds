@@ -34,28 +34,16 @@
     var camera = new BABYLON.ArcRotateCamera("Camera", 1, 0.8, 8, new BABYLON.Vector3(0, 0, 0), scene);
     camera.attachControl(canvas, true);
 
-    var mat = new BABYLON.StandardMaterial("mat", scene);
-    var texture = new BABYLON.Texture("http://jerome.bousquie.fr/BJS/images/spriteAtlas.png", scene);
-    mat.diffuseTexture = texture;
-
-    var columns = 6;  // 6 columns
-    var rows = 4;  // 4 rows
-
-    var faceUV = new Array(6);
-
-    for (var i = 0; i < 6; i++) {
-        faceUV[i] = new BABYLON.Vector4(i / columns, 0, (i + 1) / columns, 1 / rows);
-    }
-
-    var options = {
-        width: 10,
-        height: 3,
-        depth: 5,
-        faceUV: faceUV
-    };
-
-    var box = BABYLON.MeshBuilder.CreateBox('box', options, scene);
-    box.material = mat;
+    var faceColors = [];
+	faceColors[0] = BABYLON.Color3.Blue();
+	faceColors[1] = BABYLON.Color3.White()
+	faceColors[2] = BABYLON.Color3.Red();
+	faceColors[3] = BABYLON.Color3.Black();
+	faceColors[4] = BABYLON.Color3.Green();
+	faceColors[5] = BABYLON.Color3.Yellow();
+ 
+	var box = BABYLON.MeshBuilder.CreateBox("Box", {size:2}, scene, true);
+    //box.material = new BABYLON.StandardMaterial("", scene);
 
     //Create a manager for the player's sprite animation
     var pcs= new BABYLON.PointsCloudSystem("pcs", 5, scene) 
@@ -65,7 +53,7 @@
         particle.color = new BABYLON.Color4(Math.random(), Math.random(), Math.random(), Math.random() )
     }
     console.log(BABYLON.PointColor.RANDOM);
-    pcs.addVolumePoints(box, 10000);
+    pcs.addVolumePoints(box, 10000, BABYLON.PointColor.RANDOM);
     var mesh = pcs.buildMesh();
     mesh.material.pointSize = 2;
     box.dispose();

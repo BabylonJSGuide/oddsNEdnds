@@ -28,46 +28,25 @@
   
       var createScene = function () {
     var scene = new BABYLON.Scene(engine);
-    //const axis = new BABYLON.Debug.AxesViewer()
 
     // Create camera and light
     var light = new BABYLON.PointLight("Point", new BABYLON.Vector3(5, 10, 5), scene);
-    var camera = new BABYLON.ArcRotateCamera("Camera", -Math.PI / 2, Math.PI / 2, 2, new BABYLON.Vector3(0, 0, 0), scene);
+    var camera = new BABYLON.ArcRotateCamera("Camera", 1, 0.8, 2, new BABYLON.Vector3(0, 0, 0), scene);
     camera.attachControl(canvas, true);
 
     
 
     //Create a manager for the player's sprite animation
-    var pcs= new BABYLON.PointsCloudSystem("pcs", 5, scene) 
+    var pcs= new BABYLON.PointsCloudSystem("pcs", 2, scene) 
 
     var myfunc = function(particle, i) {
-        
+        particle.position = new BABYLON.Vector3(0.25 * Math.random(), i / 1000, 0.25 * Math.random());
         particle.color = new BABYLON.Color4(Math.random(), Math.random(), Math.random(), Math.random() )
-        if (particle.idx > 0) {
-            particle.parentId = particle.idx - 1;
-        }
-        particle.position = new BABYLON.Vector3(0.01, 0.1, 0);
     }
-    pcs.addPoints(100, myfunc);
+    pcs.addPoints(10000, myfunc);
     var mesh = pcs.buildMesh();
-    //mesh.material.pointSize = 5;
+    mesh.material.pointSize = 2;
 
-    pcs.updateParticle = function(particle) {
-        //if(particle.idx === 0) {
-            particle.rotation.y += 0.01;
-        //}
-        //particle.position.x += 0.01;
-        //console.log(particle.idx, particle.position)
-
-    }
-    
-    //pcs.setParticles()
-    //pcs.setParticles()
-
-    scene.registerAfterRender(() => {
-        pcs.setParticles()
-        //mesh.position.x += 0.001;
-    });
     return scene;
 }
 

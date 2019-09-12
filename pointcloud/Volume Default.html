@@ -2,7 +2,7 @@
 <html>
    <head>
       <meta charset="utf-8">
-      <title>Points Cloud</title>
+      <title>Sprites Direct JSON</title>
       <style>
         html, body {
           overflow: hidden;
@@ -48,9 +48,9 @@
     }
 
     var options = {
-        width: 2,
-        height: 2,
-        depth: 2,
+        width: 10,
+        height: 3,
+        depth: 5,
         faceUV: faceUV
     };
 
@@ -60,9 +60,7 @@
     //Create a manager for the player's sprite animation
     var pcs= new BABYLON.PointsCloudSystem("pcs", 5, scene) 
 
-    pcs.addSurfacePoints(box, 10);
-    var mesh = pcs.buildMesh();
-    mesh.material.pointSize = 20;
+    pcs.addVolumePoints(box, 10000);
     box.dispose();
 
     return scene;
