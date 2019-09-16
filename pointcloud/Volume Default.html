@@ -61,6 +61,7 @@
     var pcs= new BABYLON.PointsCloudSystem("pcs", 5, scene) 
 
     pcs.addVolumePoints(box, 10000);
+    var mesh = pcs.buildMesh();
     box.dispose();
 
     return scene;

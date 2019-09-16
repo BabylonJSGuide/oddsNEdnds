@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta charset="utf-8">
+      <title>Sprites Direct JSON</title>
+      <style>
+        html, body {
+          overflow: hidden;
+          width: 100%;
+          height: 100%;
+          margin: 0;
+          padding: 0;
+        }
+        #renderCanvas {
+          width: 100%;
+          height: 100%;
+          touch-action: none;
+        }
+    </style>
+    <script src="babylon.max.js"></script>
+   </head>
+   <body>
+        <canvas id="renderCanvas"></canvas>
+       <script>
+    if (BABYLON.Engine.isSupported()) {
+      var canvas = document.getElementById("renderCanvas");
+      var engine = new BABYLON.Engine(canvas, true);
+  
+      var createScene = function () {
+    var scene = new BABYLON.Scene(engine);
+
+    // Create camera and light
+    var light = new BABYLON.PointLight("Point", new BABYLON.Vector3(5, 10, 5), scene);
+    var camera = new BABYLON.ArcRotateCamera("Camera", 1, 0.8, 8, new BABYLON.Vector3(0, 0, 0), scene);
+    camera.attachControl(canvas, true);
+
+    var mat = new BABYLON.StandardMaterial("mat", scene);
+    var texture = new BABYLON.Texture("http://jerome.bousquie.fr/BJS/images/spriteAtlas.png", scene);
+    mat.diffuseTexture = texture;
+
+    var columns = 6;  // 6 columns
+    var rows = 4;  // 4 rows
+
+    var faceUV = new Array(6);
+
+    for (var i = 0; i < 6; i++) {
+        faceUV[i] = new BABYLON.Vector4(i / columns, 0, (i + 1) / columns, 1 / rows);
+    }
+
+    var options = {
+        width: 10,
+        height: 3,
+        depth: 5,
+        faceUV: faceUV
+    };
+
+    var box = BABYLON.MeshBuilder.CreateBox('box', options, scene);
+    box.material = mat;
+
+    //Create a manager for the player's sprite animation
+    var pcs= new BABYLON.PointsCloudSystem("pcs", 5, scene) 
+
+    pcs.addSurfacePoints(box, 100000, BABYLON.PointColor.COLOR);
+    box.dispose();
+  
+
+    return scene;
+}
+
+
+  
+  var scene = createScene();
+  
+  engine.runRenderLoop(function () {
+    scene.render();
+  
+  });
+  
+  window.addEventListener("resize", function () {
+      engine.resize();
+  });
+          }
+      </script>
+  </body>
+  </html>

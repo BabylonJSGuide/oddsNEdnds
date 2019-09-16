@@ -52,7 +52,7 @@
         particle.position = new BABYLON.Vector3(0.25 * Math.random(), i / 1000, 0.25 * Math.random());
         particle.color = new BABYLON.Color4(Math.random(), Math.random(), Math.random(), Math.random() )
     }
-    console.log(BABYLON.PointColor.RANDOM);
+
     pcs.addSurfacePoints(box, 10000, BABYLON.PointColor.RANDOM);
     var mesh = pcs.buildMesh();
     mesh.material.pointSize = 2;
