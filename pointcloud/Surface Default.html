@@ -2,7 +2,7 @@
 <html>
    <head>
       <meta charset="utf-8">
-      <title>Sprites Direct JSON</title>
+      <title>Surface Default</title>
       <style>
         html, body {
           overflow: hidden;
@@ -54,10 +54,8 @@
     }
 
     pcs.addSurfacePoints(box, 10000);
-    var mesh = pcs.buildMesh();
-    mesh.material.pointSize = 2;
+    pcs.buildMeshAsync().then(() => pcs.mesh.material.pointSize = 2);
     box.dispose();
-    pcs.setParticles()
 
     return scene;
 }

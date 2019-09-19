@@ -2,7 +2,7 @@
 <html>
    <head>
       <meta charset="utf-8">
-      <title>Sprites Direct JSON</title>
+      <title>parents rotation</title>
       <style>
         html, body {
           overflow: hidden;
@@ -49,7 +49,7 @@
         particle.position = new BABYLON.Vector3(0.01, 0.1, 0);
     }
     pcs.addPoints(100, myfunc);
-    var mesh = pcs.buildMesh();
+    var mesh = pcs.buildMeshAsync();
 
     pcs.updateParticle = function(particle) {
         particle.rotation.y += 0.01;

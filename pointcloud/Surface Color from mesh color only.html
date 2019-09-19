@@ -2,7 +2,7 @@
 <html>
    <head>
       <meta charset="utf-8">
-      <title>Sprites Direct JSON</title>
+      <title>from mesh color</title>
       <style>
         html, body {
           overflow: hidden;
@@ -38,7 +38,7 @@
 	faceColors[0] = BABYLON.Color3.Blue();
 	faceColors[1] = BABYLON.Color3.White()
 	faceColors[2] = BABYLON.Color3.Red();
-	faceColors[3] = BABYLON.Color3.Black();
+	faceColors[3] = BABYLON.Color3.Black();   
 	faceColors[4] = BABYLON.Color3.Green();
 	faceColors[5] = BABYLON.Color3.Yellow();
  
@@ -53,9 +53,8 @@
         particle.color = new BABYLON.Color4(Math.random(), Math.random(), Math.random(), Math.random() )
     }
 
-    pcs.addSurfacePoints(box, 1000000, BABYLON.PointColor.COLOR);
-    var mesh = pcs.buildMesh();
-    mesh.material.pointSize = 2;
+    pcs.addSurfacePoints(box, 100, BABYLON.PointColor.COLOR);
+    pcs.buildMeshAsync().then(() => pcs.mesh.material.pointSize = 2);
     box.dispose();
 
     return scene;

@@ -2,7 +2,7 @@
 <html>
    <head>
       <meta charset="utf-8">
-      <title>Sprites Direct JSON</title>
+      <title>Add points default</title>
       <style>
         html, body {
           overflow: hidden;
@@ -37,8 +37,8 @@
     //Create a manager for the player's sprite animation
     var pcs= new BABYLON.PointsCloudSystem("pcs", 1, scene) 
 
-    pcs.addPoints(10000);
-    var mesh = pcs.buildMesh();
+    pcs.addPoints(100);
+    pcs.buildMeshAsync();
 
     return scene;
 }

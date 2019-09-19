@@ -53,10 +53,8 @@
         particle.color = new BABYLON.Color4(Math.random(), Math.random(), Math.random(), Math.random() )
     }
     pcs.addVolumePoints(box, 10000, BABYLON.PointColor.RANDOM);
-    var mesh = pcs.buildMesh();
-    mesh.material.pointSize = 2;
+    pcs.buildMeshAsync().then(() => pcs.mesh.material.pointSize = 2);
     box.dispose();
-    pcs.setParticles()
 
     return scene;
 }

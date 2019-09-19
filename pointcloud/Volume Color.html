@@ -61,7 +61,7 @@
     var pcs= new BABYLON.PointsCloudSystem("pcs", 5, scene); 
 
     pcs.addVolumePoints(box, 10000, BABYLON.PointColor.COLOR);
-
+    pcs.buildMeshAsync();
     box.dispose();
 
     return scene;
