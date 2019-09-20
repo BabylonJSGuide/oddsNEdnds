@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta charset="utf-8">
+      <title>from mesh color stated</title>
+      <style>
+        html, body {
+          overflow: hidden;
+          width: 100%;
+          height: 100%;
+          margin: 0;
+          padding: 0;
+        }
+        #renderCanvas {
+          width: 100%;
+          height: 100%;
+          touch-action: none;
+        }
+    </style>
+    <script src="babylon.max.js"></script>
+   </head>
+   <body>
+        <canvas id="renderCanvas"></canvas>
+       <script>
+    if (BABYLON.Engine.isSupported()) {
+      var canvas = document.getElementById("renderCanvas");
+      var engine = new BABYLON.Engine(canvas, true);
+  
+      var createScene = function () {
+    var scene = new BABYLON.Scene(engine);
+
+    // Create camera and light
+    var light = new BABYLON.PointLight("Point", new BABYLON.Vector3(5, 10, 5), scene);
+    var camera = new BABYLON.ArcRotateCamera("Camera", 1, 0.8, 8, new BABYLON.Vector3(0, 0, 0), scene);
+    camera.attachControl(canvas, true);
+
+    var faceColors = [];
+	faceColors[0] = BABYLON.Color3.Blue();
+	faceColors[1] = BABYLON.Color3.White()
+	faceColors[2] = BABYLON.Color3.Red();
+	faceColors[3] = BABYLON.Color3.Black();   
+	faceColors[4] = BABYLON.Color3.Green();
+	faceColors[5] = BABYLON.Color3.Yellow();
+ 
+	var box = BABYLON.MeshBuilder.CreateBox("Box", {faceColors:faceColors, size:2}, scene, true);
+    box.material = new BABYLON.StandardMaterial("", scene);
+
+    //Create a manager for the player's sprite animation
+    var pcs= new BABYLON.PointsCloudSystem("pcs", 5, scene) 
+
+    var myfunc = function(particle, i) {
+        particle.position = new BABYLON.Vector3(0.25 * Math.random(), i / 1000, 0.25 * Math.random());
+        particle.color = new BABYLON.Color4(Math.random(), Math.random(), Math.random(), Math.random() )
+    }
+
+    pcs.addSurfacePoints(box, 10000, BABYLON.PointColor.STATED, new BABYLON.Color3(1, 0, 0), 0.5);
+    pcs.buildMeshAsync().then(() => {pcs.mesh.material.pointSize = 12; console.log("EMISSIVE", pcs.mesh.material.emissiveColor); box.dispose()});
+    
+
+    return scene;
+}
+
+
+  
+  var scene = createScene();
+  
+  engine.runRenderLoop(function () {
+    scene.render();
+  
+  });
+  
+  window.addEventListener("resize", function () {
+      engine.resize();
+  });
+          }
+      </script>
+  </body>
+  </html>
