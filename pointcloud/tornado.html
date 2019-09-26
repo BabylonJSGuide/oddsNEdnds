@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta charset="utf-8">
+      <title>Add function</title>
+      <style>
+        html, body {
+          overflow: hidden;
+          width: 100%;
+          height: 100%;
+          margin: 0;
+          padding: 0;
+        }
+        #renderCanvas {
+          width: 100%;
+          height: 100%;
+          touch-action: none;
+        }
+    </style>
+    <script src="babylon.max.js"></script>
+   </head>
+   <body>
+        <canvas id="renderCanvas"></canvas>
+       <script>
+    if (BABYLON.Engine.isSupported()) {
+      var canvas = document.getElementById("renderCanvas");
+      var engine = new BABYLON.Engine(canvas, true);
+  
+      var createScene = function () {
+    var scene = new BABYLON.Scene(engine);
+
+    // Create camera and light
+    var light = new BABYLON.HemisphericLight("HemiLight", new BABYLON.Vector3(1, 1, 0), scene);
+    light.intensity = 0.5;
+    var camera = new BABYLON.ArcRotateCamera("Camera", -Math.PI / 2, Math.PI / 2.5, 60, new BABYLON.Vector3(0, 0, 0), scene);
+    camera.attachControl(canvas, true);
+
+    var shape = [];
+    var nbPoints = 12;
+    var dTheta = 2 * Math.PI / nbPoints;
+    var radius = 0.5;
+    for ( var i = 0; i < nbPoints; i++) {
+        shape.push(new BABYLON.Vector3(radius * Math.cos(i * dTheta), radius * Math.sin(i * dTheta), 0))
+    }
+	
+	shape.push(shape[0]);
+	
+	var path = [];
+    var height = 10;
+    var waves = 2;
+    var maxAngle = 2 * waves * Math.PI;
+    nbPoints = 30;
+    deltaTheta = maxAngle / nbPoints;
+    for ( var i = 0; i < nbPoints; i++) {
+        path.push(new BABYLON.Vector3(height * Math.sin(i * dTheta)/10, i, 0))
+    } 
+	
+	var scaling = function(i, distance) {
+		return 1 + i/2;
+	};
+	
+	//Create custom extrusion with updatable parameter set to true for later changes
+	var cone = BABYLON.MeshBuilder.ExtrudeShapeCustom("star", {shape: shape, path: path, scaleFunction: scaling, sideOrientation: BABYLON.Mesh.DOUBLESIDE, updatable: true}, scene);
+	//cone.position.y = -5;
+
+    //Create a manager for the player's sprite animation
+    var pcs= new BABYLON.PointsCloudSystem("pcs", 1, scene);
+    
+    pcs.addVolumePoints(cone, 50000, BABYLON.PointColor.STATED, new BABYLON.Color3(1, 1, 1), 0.85);
+    pcs.buildMeshAsync().then(() => {cone.dispose()});
+    
+    
+    
+    var angle = 0;
+    radius = 20;
+    scene.registerAfterRender(() => {
+        pcs.mesh.rotation.y +=0.5;
+        pcs.mesh.position.x = (radius+ 1 - 2 * Math.random()) * Math.cos(angle) ;
+        pcs.mesh.position.z = (radius+ 1 - 2 * Math.random()) * Math.sin(angle) ;
+        angle +=0.01;
+    })
+
+    var ground = BABYLON.MeshBuilder.CreateGround("ground", { width: 100, height: 100}, scene);
+
+    return scene;
+}
+ 
+
+  
+  var scene = createScene();
+  
+  engine.runRenderLoop(function () {
+    scene.render();
+  
+  });
+  
+  window.addEventListener("resize", function () {
+      engine.resize();
+  });
+          }
+      </script>
+  </body>
+  </html>

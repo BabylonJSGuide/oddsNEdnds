@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta charset="utf-8">
+      <title>Endgame</title>
+      <style>
+        html, body {
+          overflow: hidden;
+          width: 100%;
+          height: 100%;
+          margin: 0;
+          padding: 0;
+        }
+        #renderCanvas {
+          width: 100%;
+          height: 100%;
+          touch-action: none;
+        }
+    </style>
+    <script src="babylon.max.js"></script>
+   </head>
+   <body>
+        <canvas id="renderCanvas"></canvas>
+       <script>
+    if (BABYLON.Engine.isSupported()) {
+      var canvas = document.getElementById("renderCanvas");
+      var engine = new BABYLON.Engine(canvas, true);
+  
+      var createScene = function () {
+    var scene = new BABYLON.Scene(engine);
+
+    // Create camera and light
+    var light = new BABYLON.DirectionalLight("dir01", new BABYLON.Vector3(0, -0.5, -1.0), scene);
+    var light2 = new BABYLON.DirectionalLight("dir02", new BABYLON.Vector3(0, 0.5, 1.0), scene);
+    var camera = new BABYLON.ArcRotateCamera("Camera", -Math.PI / 2, Math.PI / 2, 200, new BABYLON.Vector3(0, 25, 0), scene);
+    camera.attachControl(canvas, true);
+
+    var gloveMat = new BABYLON.StandardMaterial("glove", scene);
+    gloveMat.diffuseTexture = new BABYLON.Texture("https://i.imgur.com/X7m2uJf.png", scene);
+    gloveMat.diffuseTexture.hasAlpha = true;
+
+    var plane = BABYLON.MeshBuilder.CreatePlane("plane", {width: 150, height: 150, sideOrientation: BABYLON.Mesh.DOUBLESIDE}, scene);
+    plane.position.z = -50;
+    plane.position.y = 30;
+    plane.material = gloveMat;
+    scene.render();
+    var dude;
+    var endgameReady = false;
+    var dudePoints;
+    var doEndgame = false;
+    var updateSet = false;
+
+        BABYLON.SceneLoader.ImportMeshAsync("him", "https://www.babylonjs-playground.com/scenes/Dude/", "Dude.babylon", scene).then(function (result) {
+
+            result.meshes[0].setEnabled(false);
+            result.meshes[0].rotation.y = Math.PI;      
+            var pcs= new BABYLON.PointsCloudSystem("pcs", 2, scene);
+
+            pcs.initParticles = function() {
+                var bb = pcs.mesh.getBoundingInfo().boundingBox;
+                var bbmin = bb.minimumWorld.y;
+                for (var p = 0; p < pcs.nbParticles; p++) {
+                    pcs.particles[p].velocity = BABYLON.Vector3.Zero();
+                    var ay = (pcs.particles[p].position.y - bbmin) / 500;
+                    var ax = BABYLON.Scalar.RandomRange(-ay, ay);
+                    var az = BABYLON.Scalar.RandomRange(-ay, ay);
+                    pcs.particles[p].acceleration = new BABYLON.Vector3(0.25 * ax, 0.5 * Math.abs(ay) * (1 + Math.random()), 0.25 * az);
+                    var c = BABYLON.Scalar.RandomRange(0, 0.5);
+                    pcs.particles[p].color = new BABYLON.Color4(c, c, c, 1);
+                }
+            }
+
+            pcs.addSurfacePoints(result.meshes[1], 10000, BABYLON.PointColor.COLOR);
+            pcs.addSurfacePoints(result.meshes[2], 10000, BABYLON.PointColor.COLOR);
+            pcs.addSurfacePoints(result.meshes[3], 10000, BABYLON.PointColor.COLOR);
+            pcs.addSurfacePoints(result.meshes[4], 10000, BABYLON.PointColor.COLOR);
+            pcs.buildMeshAsync().then(() => {
+                pcs.mesh.visibility = 0;
+                dude = result.meshes[0];
+                dude.setEnabled(true);
+                dudePoints = pcs;
+                dudePoints.mesh.visibility = 0;
+                pcs.initParticles();
+                pcs.setParticles();
+                endgameReady = true;
+            });
+        });
+            
+        var start = false;
+        var count = 0;
+        scene.registerAfterRender(() => {
+            if (endgameReady && plane.position.x < 200) {
+                plane.position.x += 1;
+                plane.position.y + 1;
+            }
+            if (plane.position.x == 200) {
+                start = true;
+                plane.setEnabled(false);
+            }
+            if (start && dudePoints && dudePoints.mesh.visibility < 1) {
+                dudePoints.mesh.visibility += 0.002;
+                dude.getChildren(function(child) {
+                    if (child.visibility <= 0) {
+                        child.visibility = 0;
+                    }
+                    else {
+                        child.visibility -= 0.005;
+                    }
+                    return true;
+                });
+                if (dudePoints.mesh.visibility > 0.5 && !updateSet) {
+                    dudePoints.updateParticle = function(particle) {
+                        particle.velocity.addInPlace(particle.acceleration);
+                        particle.position.addInPlace(particle.velocity);
+                    }
+                    updateSet = true;
+                    doEndgame = true;
+                }
+
+            }
+            if (doEndgame) {
+                dudePoints.setParticles();
+            }
+        })
+        
+
+    
+
+    return scene;
+}
+
+
+  
+  var scene = createScene();
+  
+  engine.runRenderLoop(function () {
+    scene.render();
+  
+  });
+  
+  window.addEventListener("resize", function () {
+      engine.resize();
+  });
+          }
+      </script>
+  </body>
+  </html>
