@@ -44,7 +44,7 @@
         
         particle.color = new BABYLON.Color4(Math.random(), Math.random(), Math.random(), Math.random() )
         if (particle.idx > 0) {
-            particle.parentId = particle.idx - 1;
+            particle.parentId = 0;
         }
         particle.position = new BABYLON.Vector3(0.01, 0.1, 0);
     }

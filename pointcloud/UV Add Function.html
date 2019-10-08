@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta charset="utf-8">
+      <title>Add function</title>
+      <style>
+        html, body {
+          overflow: hidden;
+          width: 100%;
+          height: 100%;
+          margin: 0;
+          padding: 0;
+        }
+        #renderCanvas {
+          width: 100%;
+          height: 100%;
+          touch-action: none;
+        }
+    </style>
+    <script src="babylon.max.js"></script>
+   </head>
+   <body>
+        <canvas id="renderCanvas"></canvas>
+       <script>
+    if (BABYLON.Engine.isSupported()) {
+      var canvas = document.getElementById("renderCanvas");
+      var engine = new BABYLON.Engine(canvas, true);
+  
+      var createScene = function () {
+    var scene = new BABYLON.Scene(engine);
+
+    // Create camera and light
+    var light = new BABYLON.PointLight("Point", new BABYLON.Vector3(5, 10, 5), scene);
+    var camera = new BABYLON.ArcRotateCamera("Camera", -Math.PI / 4, Math.PI / 3, 5, new BABYLON.Vector3(0, 0, 0), scene);
+    camera.attachControl(canvas, true);
+
+    var myTexture = new BABYLON.Texture("https://i.imgur.com/e9uZagd.jpg", scene);
+
+    //Create a manager for the player's sprite animation
+    var pcs= new BABYLON.PointsCloudSystem("pcs", 2, scene) 
+
+    var myfunc = function(particle) {
+      var sgn = Math.sign(0.5 - Math.random())  
+      var x = 0.5 * sgn;
+        var y = 0.5 - Math.random();
+        var z = 0.5 - Math.random();
+        particle.position = new BABYLON.Vector3(x, y, z);
+        //particle.color = new BABYLON.Color4(0, 0, 0, 1);
+        particle.uv.x = (y + 1 + 0.5 * sgn) * 0.5;
+        particle.uv.y = z + 0.5; 
+    }
+    pcs.addPoints(5000, myfunc);
+    console.log(pcs._uvs);
+    pcs.buildMeshAsync().then(() => {
+      pcs.mesh.material.emissiveColor = new BABYLON.Color3(0, 0, 0);
+      pcs.mesh.material.emissiveTexture = myTexture;
+    });
+
+
+    return scene;
+}
+ 
+
+  
+  var scene = createScene();
+  
+  engine.runRenderLoop(function () {
+    scene.render();
+  
+  });
+  
+  window.addEventListener("resize", function () {
+      engine.resize();
+  });
+          }
+      </script>
+  </body>
+  </html>

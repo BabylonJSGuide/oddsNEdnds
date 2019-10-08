@@ -34,16 +34,9 @@
     var camera = new BABYLON.ArcRotateCamera("Camera", 1, 0.8, 8, new BABYLON.Vector3(0, 0, 0), scene);
     camera.attachControl(canvas, true);
 
-    var faceColors = [];
-	faceColors[0] = BABYLON.Color3.Blue();
-	faceColors[1] = BABYLON.Color3.White()
-	faceColors[2] = BABYLON.Color3.Red();
-	faceColors[3] = BABYLON.Color3.Black();   
-	faceColors[4] = BABYLON.Color3.Green();
-	faceColors[5] = BABYLON.Color3.Yellow();
  
-	var box = BABYLON.MeshBuilder.CreateBox("Box", {faceColors:faceColors, size:2}, scene, true);
-    box.material = new BABYLON.StandardMaterial("", scene);
+	var box = BABYLON.MeshBuilder.CreateBox("Box", {size:2}, scene, true);
+    //box.material = new BABYLON.StandardMaterial("", scene);
 
     //Create a manager for the player's sprite animation
     var pcs= new BABYLON.PointsCloudSystem("pcs", 5, scene) 
@@ -53,8 +46,8 @@
         particle.color = new BABYLON.Color4(Math.random(), Math.random(), Math.random(), Math.random() )
     }
 
-    pcs.addSurfacePoints(box, 10000, BABYLON.PointColor.STATED, new BABYLON.Color3(1, 0, 0), 0.5);
-    pcs.buildMeshAsync().then(() => {pcs.mesh.material.pointSize = 12; console.log("EMISSIVE", pcs.mesh.material.emissiveColor); box.dispose()});
+    pcs.addSurfacePoints(box, 1000, BABYLON.PointColor.Stated, new BABYLON.Color3(0, 1, 0), 0.5);
+    pcs.buildMeshAsync().then(() => { box.dispose()});
     
 
     return scene;

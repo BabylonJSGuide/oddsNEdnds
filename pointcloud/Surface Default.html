@@ -54,7 +54,7 @@
     }
 
     pcs.addSurfacePoints(box, 10000);
-    pcs.buildMeshAsync().then(() => pcs.mesh.material.pointSize = 2);
+    pcs.buildMeshAsync();
     box.dispose();
 
     return scene;
