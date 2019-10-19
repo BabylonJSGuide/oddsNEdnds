@@ -60,9 +60,9 @@
     //Create a manager for the player's sprite animation
     var pcs= new BABYLON.PointsCloudSystem("pcs", 5, scene) 
 
-    pcs.addSurfacePoints(box, 10000, BABYLON.PointColor.COLOR);
+    pcs.addSurfacePoints(box, 10000, BABYLON.PointColor.Color);
     pcs.buildMeshAsync().then((mesh) => {
-      mesh.scaling = new BABYLON.Vector3(0.25, 0.25, 0.25)
+      mesh.scaling = new BABYLON.Vector3(0.25, 0.25, 0.25);
       box.dispose();
     });
     
