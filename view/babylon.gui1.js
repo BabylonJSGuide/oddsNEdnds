@@ -10803,7 +10803,7 @@ var ImageScrollBar = /** @class */ (function (_super) {
     function ImageScrollBar(name) {
         var _this = _super.call(this, name) || this;
         _this.name = name;
-        _this._thumbMeasure = new _measure__WEBPACK_IMPORTED_MODULE_2__["Measure"](0, 0, 0, 0);
+        _this._tempMeasure = new _measure__WEBPACK_IMPORTED_MODULE_2__["Measure"](0, 0, 0, 0);
         return _this;
     }
     Object.defineProperty(ImageScrollBar.prototype, "backgroundImage", {
@@ -10874,31 +10874,31 @@ var ImageScrollBar = /** @class */ (function (_super) {
         // Background
         if (this._backgroundImage) {
             console.log("Vertical BACKGROUND", left, this._currentMeasure.top, width, height);           
-            this._thumbMeasure.copyFromFloats(left, this._currentMeasure.top, width, height);
+            this._tempMeasure.copyFromFloats(left, this._currentMeasure.top, width, height);
             if (this.isVertical) {
-                this._thumbMeasure.copyFromFloats(left, this._currentMeasure.top, width, height);
-                this._thumbMeasure.height += this._effectiveThumbThickness;
-                this._backgroundImage._currentMeasure.copyFrom(this._thumbMeasure);
+                this._tempMeasure.copyFromFloats(left, this._currentMeasure.top, width, height);
+                this._tempMeasure.height += this._effectiveThumbThickness;
+                this._backgroundImage._currentMeasure.copyFrom(this._tempMeasure);
                 this._backgroundImage._draw(context);
             }
             else {
                 console.log("horizontal BACKGROUND", this._currentMeasure.left, top, width, height);
-                this._thumbMeasure.copyFromFloats(this._currentMeasure.left, top, width, height);
-                this._thumbMeasure.width += this._effectiveThumbThickness;
-                this._backgroundImage._currentMeasure.copyFrom(this._thumbMeasure);
+                this._tempMeasure.copyFromFloats(this._currentMeasure.left, top, width, height);
+                this._tempMeasure.width += this._effectiveThumbThickness;
+                this._backgroundImage._currentMeasure.copyFrom(this._tempMeasure);
                 this._backgroundImage._draw(context);
             }
 
         }
         // Thumb
         if (this.isVertical) {
-            this._thumbMeasure.copyFromFloats(left - this._effectiveBarOffset, this._currentMeasure.top + thumbPosition, this._currentMeasure.width, this._effectiveThumbThickness);
+            this._tempMeasure.copyFromFloats(left - this._effectiveBarOffset, this._currentMeasure.top + thumbPosition, this._currentMeasure.width, this._effectiveThumbThickness);
         }
         else {
-            this._thumbMeasure.copyFromFloats(this._currentMeasure.left + thumbPosition, this._currentMeasure.top, this._effectiveThumbThickness, this._currentMeasure.height);
+            this._tempMeasure.copyFromFloats(this._currentMeasure.left + thumbPosition, this._currentMeasure.top, this._effectiveThumbThickness, this._currentMeasure.height);
         }
-        console.log("thumb measure", this.isVertical, this._thumbMeasure);
-        this._thumbImage._currentMeasure.copyFrom(this._thumbMeasure);
+        console.log("thumb measure", this.isVertical, this._tempMeasure);
+        this._thumbImage._currentMeasure.copyFrom(this._tempMeasure);
         this._thumbImage._draw(context);
         context.restore();
     };
@@ -10914,7 +10914,7 @@ var ImageScrollBar = /** @class */ (function (_super) {
             this._originX = x;
             this._originY = y;
             // Check if move is required
-            if (x < this._thumbMeasure.left || x > this._thumbMeasure.left + this._thumbMeasure.width || y < this._thumbMeasure.top || y > this._thumbMeasure.top + this._thumbMeasure.height) {
+            if (x < this._tempMeasure.left || x > this._tempMeasure.left + this._tempMeasure.width || y < this._tempMeasure.top || y > this._tempMeasure.top + this._tempMeasure.height) {
                 if (this.isVertical) {
                     this.value = this.minimum + (1 - ((y - this._currentMeasure.top) / this._currentMeasure.height)) * (this.maximum - this.minimum);
                 }
@@ -10976,7 +10976,7 @@ var ScrollBar = /** @class */ (function (_super) {
         _this.name = name;
         _this._background = "black";
         _this._borderColor = "white";
-        _this._thumbMeasure = new _measure__WEBPACK_IMPORTED_MODULE_2__["Measure"](0, 0, 0, 0);
+        _this._tempMeasure = new _measure__WEBPACK_IMPORTED_MODULE_2__["Measure"](0, 0, 0, 0);
         return _this;
     }
     Object.defineProperty(ScrollBar.prototype, "borderColor", {
@@ -11034,18 +11034,18 @@ var ScrollBar = /** @class */ (function (_super) {
         context.fillStyle = this.color;
         // Thumb
         if (this.isVertical) {
-            this._thumbMeasure.left = left - this._effectiveBarOffset;
-            this._thumbMeasure.top = this._currentMeasure.top + thumbPosition;
-            this._thumbMeasure.width = this._currentMeasure.width;
-            this._thumbMeasure.height = this._effectiveThumbThickness;
+            this._tempMeasure.left = left - this._effectiveBarOffset;
+            this._tempMeasure.top = this._currentMeasure.top + thumbPosition;
+            this._tempMeasure.width = this._currentMeasure.width;
+            this._tempMeasure.height = this._effectiveThumbThickness;
         }
         else {
-            this._thumbMeasure.left = this._currentMeasure.left + thumbPosition;
-            this._thumbMeasure.top = this._currentMeasure.top;
-            this._thumbMeasure.width = this._effectiveThumbThickness;
-            this._thumbMeasure.height = this._currentMeasure.height;
+            this._tempMeasure.left = this._currentMeasure.left + thumbPosition;
+            this._tempMeasure.top = this._currentMeasure.top;
+            this._tempMeasure.width = this._effectiveThumbThickness;
+            this._tempMeasure.height = this._currentMeasure.height;
         }
-        context.fillRect(this._thumbMeasure.left, this._thumbMeasure.top, this._thumbMeasure.width, this._thumbMeasure.height);
+        context.fillRect(this._tempMeasure.left, this._tempMeasure.top, this._tempMeasure.width, this._tempMeasure.height);
         context.restore();
     };
     /** @hidden */
@@ -11060,7 +11060,7 @@ var ScrollBar = /** @class */ (function (_super) {
             this._originX = x;
             this._originY = y;
             // Check if move is required
-            if (x < this._thumbMeasure.left || x > this._thumbMeasure.left + this._thumbMeasure.width || y < this._thumbMeasure.top || y > this._thumbMeasure.top + this._thumbMeasure.height) {
+            if (x < this._tempMeasure.left || x > this._tempMeasure.left + this._tempMeasure.width || y < this._tempMeasure.top || y > this._tempMeasure.top + this._tempMeasure.height) {
                 if (this.isVertical) {
                     this.value = this.minimum + (1 - ((y - this._currentMeasure.top) / this._currentMeasure.height)) * (this.maximum - this.minimum);
                 }
