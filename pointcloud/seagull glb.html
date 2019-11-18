@@ -18,7 +18,7 @@
         }
     </style>
     <script src="babylon.max.js"></script>
-    <script src="https://preview.babylonjs.com/loaders/babylonjs.loaders.max.js"></script>
+    <script src="https://preview.babylonjs.com/loaders/babylon.glTFFileLoader.js"></script>
    </head>
    <body>
         <canvas id="renderCanvas"></canvas>
@@ -36,7 +36,13 @@
 
 
           BABYLON.SceneLoader.ImportMeshAsync("", "https://www.babylonjs-playground.com/scenes/", "seagulf.glb", scene).then(function (result) {
+            result.meshes[0].setEnabled(false)
+   
+            var pcs= new BABYLON.PointsCloudSystem("pcs", 1, scene);
 
+            pcs.addSurfacePoints(result.meshes[1], 1000000, BABYLON.PointColor.Color);
+
+            pcs.buildMeshAsync();
           });
             
  

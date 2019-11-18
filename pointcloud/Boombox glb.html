@@ -18,7 +18,7 @@
         }
     </style>
     <script src="babylon.max.js"></script>
-    <script src="https://preview.babylonjs.com/loaders/babylonjs.loaders.max.js"></script>
+    <script src="https://preview.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>
    </head>
    <body>
         <canvas id="renderCanvas"></canvas>
@@ -31,12 +31,18 @@
       var scene = new BABYLON.Scene(engine);
 
       var ligh2 = new BABYLON.HemisphericLight("hemi", new BABYLON.Vector3(0, 1, 0), scene);
-      var camera = new BABYLON.ArcRotateCamera("Camera", -Math.PI / 2, Math.PI / 2, 2, new BABYLON.Vector3(0, 0, 0), scene);
+      var camera = new BABYLON.ArcRotateCamera("Camera", -Math.PI / 2, Math.PI / 2, 1, new BABYLON.Vector3(0, 0, 0), scene);
       camera.attachControl(canvas, true);
 
 
           BABYLON.SceneLoader.ImportMeshAsync("", "https://www.babylonjs-playground.com/scenes/", "BoomBox.glb", scene).then(function (result) {
+            result.meshes[0].setEnabled(false)
+   
+            var pcs= new BABYLON.PointsCloudSystem("pcs", 1, scene);
 
+            pcs.addSurfacePoints(result.meshes[1], 100000, BABYLON.PointColor.Color, 0);
+
+            pcs.buildMeshAsync();
           });
             
  

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta charset="utf-8">
+      <title>Scroller</title>
+      <style>
+        html, body {
+          overflow: hidden;
+          width: 100%;
+          height: 100%;
+          margin: 0;
+          padding: 0;
+        }
+        #renderCanvas {
+          width: 100%;
+          height: 100%;
+          touch-action: none;
+        }
+    </style>
+    <script src="babylon.max.js"></script>
+    <script src="babylon.gui.js"></script>
+   </head>
+   <body>
+        <canvas id="renderCanvas"></canvas>
+       <script>
+    if (BABYLON.Engine.isSupported()) {
+      var canvas = document.getElementById("renderCanvas");
+      var engine = new BABYLON.Engine(canvas, true);
+  
+var createScene = function () {
+
+// This creates a basic Babylon Scene object (non-mesh)
+var scene = new BABYLON.Scene(engine);
+
+// This creates and positions a free camera (non-mesh)
+var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 5, -10), scene);
+
+// This targets the camera to scene origin
+camera.setTarget(BABYLON.Vector3.Zero());
+
+// This attaches the camera to the canvas
+camera.attachControl(canvas, true);
+
+// This creates a light, aiming 0,1,0 - to the sky (non-mesh)
+var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 1, 0), scene);
+
+// Default intensity is 1. Let's dim the light a small amount
+light.intensity = 0.7;
+
+// Our built-in 'sphere' shape. Params: name, subdivs, size, scene
+var sphere = BABYLON.Mesh.CreateSphere("sphere1", 16, 2, scene);
+
+// Move the sphere upward 1/2 its height
+sphere.position.y = 1;
+
+// Our built-in 'ground' shape. Params: name, width, depth, subdivs, scene
+var ground = BABYLON.Mesh.CreateGround("ground1", 6, 6, 2, scene);
+
+var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
+
+var sv = new BABYLON.GUI.ScrollViewer(null, true);
+sv.width = 0.4;
+sv.height = 0.4;
+sv.background = "#CCCCCC";
+
+advancedTexture.addControl(sv);
+
+var rc = new BABYLON.GUI.Rectangle();
+rc.thickness = 10;
+rc.width = 2;
+rc.height = 2;
+rc.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+rc.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
+rc.color = "red";
+rc.background = "yellow";
+
+sv.addControl(rc);
+
+var image = new BABYLON.GUI.Image("but", "https://www.babylonjs-playground.com/textures/Logo.png");
+image.width = 0.4;
+image.height = 0.4;
+rc.addControl(image); 
+
+
+sv.barImage = new BABYLON.GUI.Image("a", "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAsAAAApCAYAAADjyNMbAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsIAAA7CARUoSoAAAAQjSURBVEhLfZU9jBtVEMd/++2PtX1nO/bZuUuUKBCCBBQRDRISQSFSBB0FHaJAiAYoqJFSUNCmSDqEhEBCSFCABD00lBCCaEjEQZLD8bd319717nqZt4lPd9HBX/rvjOfN+3v2zfhZy7IMhQ/eeT177dXLRNke/nxIxemw0znP1WvX+PD6Z5rKyZN3f/0uu/3bDSwi+pNd4lXEbAxFs8UTT57l7PnzuN1nNePGL99kJxsOduIx6f3FbNpj4XlEfsRquWTYl80kfP7V11f0yxcv0KoXIB5jpAGEHv54QBrOxfYomBG7t25y6cUX0FdJhD8diNKEZD4jjoJcceHNZHHJvb9v408GLGRNXwz/lMIXxLbJlALLaINlvMFCLzPJEvSSgZN5DG/9jJ4fxRFYn9LaKugHPzyKR9eOVFZJR4kcUv6/b1H4z5qPQq6saXk3c6zVH40p7iurxYMJaxwsTc80nZSMNM2f+5sObt5XFhxaVJtWq9W+ooqtcw694DphraSgkhRy5dx7CLVgGEZOpXYQubJ6rHcrrH1VyrqcdY5+MKioak6S5FDtisrPldXXWpaFbds4jkOhUDhEFTdNE105KlAqlXBdl2q1mrNWq+WsVCqUy+U8R3fsMs1yle1amZ2KzXbXpNtacWYLHmvCqbpJe7NEVwR0q6RT3LRxG2WqbZf61jHaJzq0dzq0drZobrdpdBtUmlW0Lz59K3vlwlNYacQ8CEjSjChO8/fIViGOLedruSTW42KlnmJ9E7vZoLrVpnK8Qf1ki9rJNrWdJtXjdUrdDZxmWZpiVuQtK+C46G4Du9bErrdxNo5hC82aCLmbmG5NknWHTC9KN+Q6MEpCqU2rsEIExEd8xDfE6oZhyaLUlz3snIxEKo80S+WT/qAhuZ+3Ww2MdFF+9miqS8rGkhZjiq8J9SzEZCntTqeQTDGQ2yidoYlvZQFGLPF4AouRxH30aCSU4wq8KeFoxLzfZ7S3x+DOHeEe07v/4PV6hPf7zMdjtE8+fjN7+flzJMGMNI6Zh6Gcc8IqSeUWXUkpIXapilk8J8qeJIwjUfAZ350y3fPp747p7Y64L+xLbHBvxqwfosdBRjhLCYZLPAmMewHDPbnbZHNP2cGc0ShkOIlEebEknIfCiGUQ400CvNmcwA+ZiJ0FIX4UMxPqy9iXwY7RdJkHM8O0NCxbGusYyLGg2XK+JZOVJce6yiI0YykJUCgauDKm1VohZ9E1KFYtsRamTKeha8aVWqND5/RxFkaEaXskukepalKSudAK2yySLj/8+PuDP6D33ryUPXOuw5nTLVwnzjs6nfnyR+QQxiXuDRLefv+qNFuSFd5946WsJWN4arvBiRPbTH2Pmzf/YOJnfHT923xw9pMVLj73dNaoFJkvfIpFR+bI5svvf3p4T8C/TXQkfpR1kMUAAAAASUVORK5CYII=");
+console.log("HBS Th im", sv._horizontalBarSpace.children[0]._thumbMeasure);
+console.log("HB", sv._barSize);
+
+sv.barBackgroundImage = new BABYLON.GUI.Image("b", "'data:image/png;base64,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';");
+console.log(sv.horizontalBar.backgroundImage.name)
+
+sv.barSize = 20;
+
+return scene;
+
+};
+
+
+  
+  var scene = createScene();
+  
+  engine.runRenderLoop(function () {
+    scene.render();
+  
+  });
+  
+  window.addEventListener("resize", function () {
+      engine.resize();
+  });
+          }
+      </script>
+  </body>
+  </html>
