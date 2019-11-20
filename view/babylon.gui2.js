@@ -6673,7 +6673,7 @@ var Image = /** @class */ (function (_super) {
      */
     Image.prototype._svgCheck = function (value) {
         var _this = this;
-        if (window.SVGSVGElement && (value.search(/.svg#/gi) !== -1) && (value.indexOf("#") === value.lastIndexOf("#"))) {
+        if ((value.search(/.svg#/gi) !== -1) && (value.indexOf("#") === value.lastIndexOf("#"))) {
             var svgsrc = value.split('#')[0];
             var elemid = value.split('#')[1];
             // check if object alr exist in document
@@ -9106,6 +9106,7 @@ var ScrollViewer = /** @class */ (function (_super) {
         _this._barSize = 20;
         _this._pointerIsOver = false;
         _this._wheelPrecision = 0.05;
+        //CHANGE
         _this._thumbLength = 0.5;
         _this._thumbHeight = 1;
         _this._barImageHeight = 1;
@@ -9302,7 +9303,7 @@ var ScrollViewer = /** @class */ (function (_super) {
                 return;
             }
             this._barImage = value;
-            var hb = this._horizontalBar;
+            var hb = this.horizontalBar;
             var vb = this._verticalBar;
             hb.thumbImage = value;
             vb.thumbImage = value;
@@ -9332,7 +9333,7 @@ var ScrollViewer = /** @class */ (function (_super) {
         configurable: true
     });
     Object.defineProperty(ScrollViewer.prototype, "thumbLength", {
-        /** Gets or sets the length of the thumb */
+        /** Gets or sets the size of the thumb */
         get: function () {
             return this._thumbLength;
         },
@@ -9357,7 +9358,7 @@ var ScrollViewer = /** @class */ (function (_super) {
         configurable: true
     });
     Object.defineProperty(ScrollViewer.prototype, "thumbHeight", {
-        /** Gets or sets the height of the thumb */
+        /** Gets or sets the size of the thumb */
         get: function () {
             return this._thumbHeight;
         },
@@ -9382,7 +9383,7 @@ var ScrollViewer = /** @class */ (function (_super) {
         configurable: true
     });
     Object.defineProperty(ScrollViewer.prototype, "barImageHeight", {
-        /** Gets or sets the height of the bar image */
+        /** Gets or sets the size of the barImage */
         get: function () {
             return this._barImageHeight;
         },
@@ -9481,8 +9482,9 @@ var ScrollViewer = /** @class */ (function (_super) {
             this._window.top = newTop;
             this._rebuildLayout = true;
         }
+        //CHANGE HERE
         this._horizontalBar.thumbWidth = this._thumbLength * 0.9 * this._clientWidth + "px";
-        this._verticalBar.thumbWidth = this._thumbLength * 0.9 * this._clientHeight + "px";
+        this._verticalBar.thumbWidth = this._thumbLength *  0.9 * this._clientHeight + "px";
     };
     ScrollViewer.prototype._link = function (host) {
         _super.prototype._link.call(this, host);
@@ -10829,10 +10831,11 @@ var ImageScrollBar = /** @class */ (function (_super) {
     function ImageScrollBar(name) {
         var _this = _super.call(this, name) || this;
         _this.name = name;
+        _this._tempMeasure = new _measure__WEBPACK_IMPORTED_MODULE_2__["Measure"](0, 0, 0, 0);
+        //CHANGE
         _this._thumbLength = 0.5;
         _this._thumbHeight = 1;
         _this._barImageHeight = 1;
-        _this._tempMeasure = new _measure__WEBPACK_IMPORTED_MODULE_2__["Measure"](0, 0, 0, 0);
         return _this;
     }
     Object.defineProperty(ImageScrollBar.prototype, "backgroundImage", {
@@ -10877,14 +10880,34 @@ var ImageScrollBar = /** @class */ (function (_super) {
         enumerable: true,
         configurable: true
     });
+    // CHANGE
     Object.defineProperty(ImageScrollBar.prototype, "thumbLength", {
         /**
-         * Gets or sets the length of the thumb
+         * Gets or sets the image used to render the thumb
          */
         get: function () {
             return this._thumbLength;
         },
         set: function (value) {
+            var _this = this;
+            if (this._thumbLength === value) {
+                return;
+            }
+            this._thumbLength = value;
+            this._markAsDirty();
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ImageScrollBar.prototype, "thumbLength", {
+        /**
+         * Gets or sets the image used to render the thumb
+         */
+        get: function () {
+            return this._thumbLength;
+        },
+        set: function (value) {
+            var _this = this;
             if (this._thumbLength === value) {
                 return;
             }
@@ -10896,13 +10919,14 @@ var ImageScrollBar = /** @class */ (function (_super) {
     });
     Object.defineProperty(ImageScrollBar.prototype, "thumbHeight", {
         /**
-         * Gets or sets the height of the thumb
+         * Gets or sets the image used to render the thumb
          */
         get: function () {
             return this._thumbHeight;
         },
         set: function (value) {
-            if (this._thumbLength === value) {
+            var _this = this;
+            if (this._thumbHeight === value) {
                 return;
             }
             this._thumbHeight = value;
@@ -10913,12 +10937,13 @@ var ImageScrollBar = /** @class */ (function (_super) {
     });
     Object.defineProperty(ImageScrollBar.prototype, "barImageHeight", {
         /**
-         * Gets or sets the height of the bar image
+         * Gets or sets the image used to render the thumb
          */
         get: function () {
             return this._barImageHeight;
         },
         set: function (value) {
+            var _this = this;
             if (this._barImageHeight === value) {
                 return;
             }
@@ -10950,16 +10975,17 @@ var ImageScrollBar = /** @class */ (function (_super) {
         var top = this._renderTop;
         var width = this._renderWidth;
         var height = this._renderHeight;
-        // Background
+        // Background CHANGE HERE
         if (this._backgroundImage) {
             this._tempMeasure.copyFromFloats(left, top, width, height);
+            console.log("BIH", this._barImageHeight);
             if (this.isVertical) {
-                this._tempMeasure.copyFromFloats(left + width * (1 - this._barImageHeight) * 0.5, this._currentMeasure.top, width * this._barImageHeight, height);
+                this._tempMeasure.copyFromFloats(left + width * ( 1 - this._barImageHeight) * 0.5, this._currentMeasure.top, width * this._barImageHeight, height);
                 this._tempMeasure.height += this._effectiveThumbThickness;
                 this._backgroundImage._currentMeasure.copyFrom(this._tempMeasure);
             }
             else {
-                this._tempMeasure.copyFromFloats(this._currentMeasure.left, top + height * (1 - this._barImageHeight) * 0.5, width, height * this._barImageHeight);
+                this._tempMeasure.copyFromFloats(this._currentMeasure.left, top + height * ( 1 - this._barImageHeight) * 0.5, width, height * this._barImageHeight);
                 this._tempMeasure.width += this._effectiveThumbThickness;
                 this._backgroundImage._currentMeasure.copyFrom(this._tempMeasure);
             }
@@ -10967,10 +10993,12 @@ var ImageScrollBar = /** @class */ (function (_super) {
         }
         // Thumb
         if (this.isVertical) {
-            this._tempMeasure.copyFromFloats(left - this._effectiveBarOffset + this._currentMeasure.width * (1 - this._thumbHeight) * 0.5, this._currentMeasure.top + thumbPosition, this._currentMeasure.width * this._thumbHeight, this._effectiveThumbThickness);
+            console.log("vert", left - this._effectiveBarOffset + this._currentMeasure.width * ( 1 - this._thumbHeight) * 0.5, this._currentMeasure.top + thumbPosition, this._currentMeasure.width * this._thumbHeight, this._effectiveThumbThickness);
+            this._tempMeasure.copyFromFloats(left - this._effectiveBarOffset + this._currentMeasure.width * ( 1 - this._thumbHeight) * 0.5, this._currentMeasure.top + thumbPosition, this._currentMeasure.width * this._thumbHeight, this._effectiveThumbThickness);
         }
         else {
-            this._tempMeasure.copyFromFloats(this._currentMeasure.left + thumbPosition, this._currentMeasure.top + this._currentMeasure.height * (1 - this._thumbHeight) * 0.5, this._effectiveThumbThickness, this._currentMeasure.height * this._thumbHeight);
+            console.log("horz", this._currentMeasure.left + thumbPosition, this._currentMeasure.top + this._currentMeasure.height * ( 1 - this._thumbHeight) * 0.5, this._effectiveThumbThickness, this._currentMeasure.height * this._thumbHeight)
+            this._tempMeasure.copyFromFloats(this._currentMeasure.left + thumbPosition, this._currentMeasure.top + this._currentMeasure.height * ( 1 - this._thumbHeight) * 0.5, this._effectiveThumbThickness, this._currentMeasure.height * this._thumbHeight);
         }
         this._thumbImage._currentMeasure.copyFrom(this._tempMeasure);
         this._thumbImage._draw(context);
