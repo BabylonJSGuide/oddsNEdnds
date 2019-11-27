@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta charset="utf-8">
+      <title>Scroller</title>
+      <style>
+        html, body {
+          overflow: hidden;
+          width: 100%;
+          height: 100%;
+          margin: 0;
+          padding: 0;
+        }
+        #renderCanvas {
+          width: 100%;
+          height: 100%;
+          touch-action: none;
+        }
+    </style>
+    <script src="babylon.max.js"></script>
+    <script src="babylon.gui3.js"></script>
+   </head>
+   <body>
+        <canvas id="renderCanvas"></canvas>
+       <script>
+    if (BABYLON.Engine.isSupported()) {
+      var canvas = document.getElementById("renderCanvas");
+      var engine = new BABYLON.Engine(canvas, true);
+  
+var createScene = function () {
+
+// This creates a basic Babylon Scene object (non-mesh)
+var scene = new BABYLON.Scene(engine);
+
+// This creates and positions a free camera (non-mesh)
+var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 5, -10), scene);
+
+// This targets the camera to scene origin
+camera.setTarget(BABYLON.Vector3.Zero());
+
+// This attaches the camera to the canvas
+camera.attachControl(canvas, true);
+
+// This creates a light, aiming 0,1,0 - to the sky (non-mesh)
+var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 1, 0), scene);
+
+// Default intensity is 1. Let's dim the light a small amount
+light.intensity = 0.7;
+
+var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
+
+console.log("ADVANCED", advancedTexture._canvas.width, advancedTexture._canvas.height);
+
+var sv = new BABYLON.GUI.ScrollViewer(null, true);
+sv.width = "350px";
+sv.height = "350px";
+sv.background = "#CCCCCC";
+
+advancedTexture.addControl(sv);
+
+var rc = new BABYLON.GUI.Rectangle();
+rc.thickness = 10;
+rc.width = 2;
+rc.height = 2;
+rc.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+rc.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
+rc.color = "red";
+rc.background = "yellow";
+
+sv.addControl(rc);
+
+var image = new BABYLON.GUI.Image("but", "https://www.babylonjs-playground.com/textures/Logo.png");
+image.width = 0.4;
+image.height = 0.4;
+rc.addControl(image); 
+
+sv.thumbImage = new BABYLON.GUI.Image("thumb", "https://i.imgur.com/DRSozlo.jpg");
+sv.thumbImage._rotation = Math.PI / 2;
+sv.barImage = new BABYLON.GUI.Image("bar", "https://i.imgur.com/CQzhwKj.png");
+sv.barImage._rotation = Math.PI / 2;
+
+sv.thumbLength = 0.25;
+sv.thumbHeight = 0.7;
+sv.barImageHeight = 1;
+sv.barSize = 120;
+sv.scrollBackground = "black";
+sv.barBackground = "black";
+
+return scene;
+
+};
+
+
+  
+  var scene = createScene();
+  
+  engine.runRenderLoop(function () {
+    scene.render();
+  
+  });
+  
+  window.addEventListener("resize", function () {
+      engine.resize();
+  });
+          }
+      </script>
+  </body>
+  </html>
