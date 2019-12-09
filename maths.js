@@ -10,6 +10,7 @@ var writeMaths = function() {
     html += '</mrow>';
 	html += '</math>';
 	myDiv.innerHTML = html; */
+	console.log(myDiv);
 	myDiv.style.position = 'absolute';
 	myDiv.style.top = '50px';
 	myDiv.style.right = '20px';
