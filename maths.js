@@ -13,5 +13,5 @@ var writeMaths = function() {
 	myDiv.style.position = 'absolute';
 	myDiv.style.top = '50px';
 	myDiv.style.right = '20px';
-	document.body.appendChild('myDiv');
+	document.body.appendChild(myDiv);
 };
