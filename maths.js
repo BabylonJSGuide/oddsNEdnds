@@ -1,6 +1,6 @@
 var writeMaths = function() {
 	var myDiv = document.createElement('div');
-	var html = '<math xmlns = "http://www.w3.org/1998/Math/MathML">';
+	/*var html = '<math xmlns = "http://www.w3.org/1998/Math/MathML">';
 	html += '<mrow>';
     html += '<msup><mi>a</mi><mn>2</mn></msup>';
     html += '<mo>+</mo>';
@@ -9,9 +9,12 @@ var writeMaths = function() {
     html += '<msup><mi>c</mi><mn>2</mn></msup>';
     html += '</mrow>';
 	html += '</math>';
-	myDiv.innerHTML = html;
+	myDiv.innerHTML = html; */
 	myDiv.style.position = 'absolute';
 	myDiv.style.top = '50px';
 	myDiv.style.right = '20px';
+	myDiv.style.width = '300px';
+	myDiv.style.height = '400px';
+	myDiv.style.backgroundColor = '#FF0000';
 	document.body.appendChild(myDiv);
 };
